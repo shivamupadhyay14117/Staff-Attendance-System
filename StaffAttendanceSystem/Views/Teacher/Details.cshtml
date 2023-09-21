@@ -1,0 +1,70 @@
+﻿@model StaffAttendanceSystem.Models.Teacher
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Add any additional CSS files or styles here -->
+</head>
+<body>
+
+    <div class="container">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav id="sidebar" class="col-md-3">
+                <div class="list-group">
+                    <a href="@Url.Action("Index", "Teacher")" class="list-group-item list-group-item-action">
+                        Back to Teacher List
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action active">
+                        Teacher Details
+                    </a>
+                </div>
+            </nav>
+
+            <!-- Main content -->
+            <div class="col-md-9">
+                <h2>Teacher Details</h2>
+
+                <table class="table">
+                    <tr>
+                        <th>ID:</th>
+                        <td>@Model.Id</td>
+                    </tr>
+                    <tr>
+                        <th>Full Name:</th>
+                        <td>@Model.FullName</td>
+                    </tr>
+                    <tr>
+                        <th>Email:</th>
+                        <td>@Model.Email</td>
+                    </tr>
+                    <tr>
+                        <th>Phone Number:</th>
+                        <td>@Model.PhoneNumber</td>
+                    </tr>
+                    <tr>
+                        <th>Department:</th>
+                        <td>@Model.Department</td>
+                    </tr>
+                    <tr>
+                        <th>Profile Picture:</th>
+                        <td>
+                            @if (!string.IsNullOrEmpty(Model.ProfilePictureUrl))
+                            {
+                                <img src="@Model.ProfilePictureUrl" alt="Profile Picture" class="img-fluid" />
+                            }
+                            else
+                            {
+                                <p>No profile picture available.</p>
+                            }
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

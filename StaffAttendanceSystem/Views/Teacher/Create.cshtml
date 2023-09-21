@@ -1,0 +1,83 @@
+﻿@model StaffAttendanceSystem.Models.AttendanceViewModel
+
+@{
+    ViewData["Title"] = "Request Time Off";
+    Layout = null; // Remove any layout for this view
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Request Time Off</title>
+
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Include Bootstrap JS and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- Include your custom CSS styles as needed -->
+
+</head>
+<body>
+    <div class="container">
+        <h2>Request Time Off</h2>
+
+        <form asp-action="Create" method="post" id="timeOffForm">
+            @Html.AntiForgeryToken()
+
+            <div class="form-group">
+                <label for="teacherId">Teacher ID:</label>
+                <input type="text" id="teacherId" name="teacherId" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label for="date">Date:</label>
+                <input type="date" id="date" name="date" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label for="reason">Reason:</label>
+                <textarea id="reason" name="reason" class="form-control" required></textarea>
+            </div>
+
+            <!-- Add more input fields for other properties as needed -->
+
+            <div class="form-group">
+                <input type="submit" value="Submit Request" class="btn btn-primary" />
+                <a href="/api/getDetails">Back to List</a>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Add a script to handle form submission using AJAX
+        $(document).ready(function () {
+            $('#timeOffForm').on('submit', function (e) {
+                e.preventDefault();
+                // Serialize the form data
+                var formData = $('#timeOffForm').serialize();
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/api/SubmitTimeOff', // Use the custom route URL
+                    data: formData,
+                    success: function () {
+                        // Show a success message
+                        $('.container').append('<div class="alert alert-success mt-3">Request saved successfully.</div>');
+
+                        // Clear the form fields if needed
+                        $('#teacherId, #date, #reason').val('');
+                    },
+                    error: function () {
+                        // Handle errors if needed
+                    }
+                });
+            });
+        });
+    </script>
+
+
+</body>
+</html>
