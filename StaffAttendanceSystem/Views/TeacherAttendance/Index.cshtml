@@ -7,19 +7,274 @@
 
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>Teacher Attendance</title>
-
     <!-- Include Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <!-- Include Bootstrap Date Range Picker CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daterangepicker@3.1.0/daterangepicker.css">
-    <link rel="stylesheet" href="/css/style.css">
-   
+
+    @*   <link rel="stylesheet" href="/css/style.css">*@
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: url(/css/images//html_table.jpg) center / cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        main.table {
+            width: 82vw;
+            height: 90vh;
+            background-color: #fff5;
+            backdrop-filter: blur(7px);
+            box-shadow: 0 .4rem .8rem #0005;
+            border-radius: .8rem;
+            overflow: hidden;
+        }
+
+        .table__header {
+            width: 100%;
+            height: 10%;
+            background-color: #fff4;
+            padding: .8rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+            .table__header .input-group {
+                width: 35%;
+                height: 100%;
+                background-color: #fff5;
+                padding: 0 .8rem;
+                border-radius: 2rem;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                transition: .2s;
+            }
+
+                .table__header .input-group:hover {
+                    width: 45%;
+                    background-color: #fff8;
+                    box-shadow: 0 .1rem .4rem #0002;
+                }
+
+                .table__header .input-group img {
+                    width: 1.2rem;
+                    height: 1.2rem;
+                }
+
+                .table__header .input-group input {
+                    width: 100%;
+                    padding: 0 .5rem 0 .3rem;
+                    background-color: transparent;
+                    border: none;
+                    outline: none;
+                }
+
+        .table__body {
+            width: 95%;
+            max-height: calc(89% - 1.6rem);
+            background-color: #fffb;
+            margin: .8rem auto;
+            border-radius: .6rem;
+            overflow: auto;
+            overflow: overlay;
+        }
+
+            .table__body::-webkit-scrollbar {
+                width: 0.5rem;
+                height: 0.5rem;
+            }
+
+            .table__body::-webkit-scrollbar-thumb {
+                border-radius: .5rem;
+                background-color: #0004;
+                visibility: hidden;
+            }
+
+            .table__body:hover::-webkit-scrollbar-thumb {
+                visibility: visible;
+            }
+
+
+
+        .status {
+            padding: .4rem 0;
+            border-radius: 2rem;
+            text-align: center;
+        }
+
+            .status.delivered {
+                background-color: #86e49d;
+                color: #006b21;
+            }
+
+            .status.cancelled {
+                background-color: #d893a3;
+                color: #b30021;
+            }
+
+            .status.pending {
+                background-color: #ebc474;
+            }
+
+            .status.shipped {
+                background-color: #6fcaea;
+            }
+
+
+
+
+        .export__file {
+            position: relative;
+        }
+
+            .export__file .export__file-btn {
+                display: inline-block;
+                width: 2rem;
+                height: 2rem;
+                background: #fff6 url(/css/images//export.png) center / 80% no-repeat;
+                border-radius: 50%;
+                transition: .2s ease-in-out;
+            }
+
+                .export__file .export__file-btn:hover {
+                    background-color: #fff;
+                    transform: scale(1.15);
+                    cursor: pointer;
+                }
+
+        
+
+        /* Global CSS styles here */
+        /* Styling specific to the attendance table */
+        .attendance-table {
+            width: 100%;
+        }
+
+            .attendance-table td img {
+                width: 36px;
+                height: 36px;
+                margin-right: .5rem;
+                border-radius: 50%;
+                vertical-align: middle;
+            }
+
+            .attendance-table, .attendance-table th, .attendance-table td {
+                border-collapse: collapse;
+                padding: 1rem;
+                text-align: left;
+            }
+
+                .attendance-table thead th {
+                    position: sticky;
+                    top: 0;
+                    left: 0;
+                    background-color: #d5d1defe;
+                    cursor: pointer;
+                    text-transform: capitalize;
+                }
+
+                .attendance-table tbody tr:nth-child(even) {
+                    background-color: #0000000b;
+                }
+
+                .attendance-table tbody tr {
+                    --delay: .1s;
+                    transition: .5s ease-in-out var(--delay), background-color 0s;
+                }
+
+                    .attendance-table tbody tr.hide {
+                        opacity: 0;
+                        transform: translateX(100%);
+                    }
+
+                    .attendance-table tbody tr:hover {
+                        background-color: #fff6 !important;
+                    }
+
+                    .attendance-table tbody tr td,
+                    .attendance-table tbody tr td p,
+                    .attendance-table tbody tr td img {
+                        transition: .2s ease-in-out;
+                    }
+
+                    .attendance-table tbody tr.hide td,
+                    .attendance-table tbody tr.hide td p {
+                        padding: 0;
+                        font: 0 / 0 sans-serif;
+                        transition: .2s ease-in-out .5s;
+                    }
+
+                        .attendance-table tbody tr.hide td img {
+                            width: 0;
+                            height: 0;
+                            transition: .2s ease-in-out .5s;
+                        }
+
+                        .form-search
+                        {
+            width: 35%;
+            height: 100%;
+            background-color: #fff5;
+            padding: 0 .8rem;
+            border-radius: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: .2s;
+                        }
+
+        .form-search:hover {
+            width: 45%;
+            background-color: #fff8;
+            box-shadow: 0 .1rem .4rem #0002;
+                width: 1.2rem;
+                height: 1.2rem;
+                width: 100%;
+                padding: 0 .5rem 0 .3rem;
+                background-color: transparent;
+                border: none;
+                outline: none;
+        }
+
+        input
+        {
+            width: 100%;
+            padding: 0 .5rem 0 .3rem;
+            background-color: transparent;
+            border: none;
+            outline: none;
+            display: none;
+        }
+
+        input:checked
+        {
+            opacity: 1;
+    transform: scale(1);
+    z-index: 100;
+        }
+
+    </style>
+
+
 </head>
 <body>
-    <div class="container">
+    <main class="table">
         <h2>Teacher Attendance</h2>
 
         <div class="text-center mt-3">
@@ -27,153 +282,179 @@
         </div>
 
         <!-- Week Picker -->
-        <div class="form-group">
-            <label for="weekPicker">Select Week:</label>
-            <div class="input-group">
-                <input type="text" id="weekPicker" class="form-control" placeholder="Select a week">
-                <div class="input-group-append">
-                    <span class="input-group-text">
-                        <i class="fa fa-calendar"></i>
-                    </span>
+
+        <label for="weekPicker">Select Week:</label>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-6 form-group">
+                    <div class="input-group" id="DateDemo">
+                        <!-- Calendar Icon -->
+                        <span class="input-group-addon">
+                            <i class="fa fa-calendar"></i>
+                        </span>
+                        <input type='text' id='weekPicker' placeholder="Select Week" />
+                    </div>
+                </div>
+                <!-- Search Form -->
+                
+                    <div class="form-search">
+                        <input type="search" id="searchInput" placeholder="Search Teacher..." class="form-control search-input">
+                        <!-- Search Icon -->
+                        <div class="input-group-append">
+                            <button class="btn btn-primary search-button" type="button"><i class="fa fa-search"></i></button>
+                        </div>
+                    
                 </div>
             </div>
-        </div>
+            </div>
 
-        <!-- Attendance Table -->
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Teacher ID<span class="icon-arrow"></span></th>
-                    <th>Name<span class="icon-arrow"></span></th>
-                    <th>Teacher Status<span class="icon-arrow"></span></th>
-                    <th>InTime<span class="icon-arrow"></span></th>
-                    <th>OutTime<span class="icon-arrow"></span></th>
-                    <th>Reason<span class="icon-arrow"></span></th>
-                    @for (var day = 0; day < 5; day++)
-                    {
-                        var date = Model.Monday.AddDays(day);
-                        <th>@date.ToString("ddd, dd MMM")</th>
-                    }
-                    <th>Edit</th>
-                    <th>Delete</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Render attendance details directly in the HTML -->
-                @foreach (var teacher in Model.Teachers)
-                {
-                    var attendance = Model.Attendances.FirstOrDefault(a => a.TeacherId == teacher.Id);
-                    <tr class="teacher-row">
-                        <td>@teacher.Id</td>
-                        <td>
-                            <a href="@Url.Action("Details", "Teacher", new { id = teacher.Id })">
-                                @teacher.FullName
-                            </a>
-                        </td>
-                        <td>@teacher.Status</td>
-                        @if (attendance != null)
+
+
+            <section class="table__body">
+                <!-- Attendance Table -->
+                <table class="attendance-table">
+                    <thead>
+                        <tr>
+                            <th>Teacher ID<span class="icon-arrow"></span></th>
+                            <th>Name<span class="icon-arrow"></span></th>
+                            <th>Teacher Status<span class="icon-arrow"></span></th>
+                            <th>InTime<span class="icon-arrow"></span></th>
+                            <th>OutTime<span class="icon-arrow"></span></th>
+                            <th>Reason<span class="icon-arrow"></span></th>
+                            @for (var day = 0; day < 5; day++)
+                            {
+                                var date = Model.Monday.AddDays(day);
+                                <th>@date.ToString("ddd, dd MMM")</th>
+                            }
+                            <th>Edit</th>
+                            <th>Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Render attendance details directly in the HTML -->
+                        @foreach (var teacher in Model.Teachers)
                         {
-                            <td>@attendance.InTime</td>
-                            <td>@attendance.OutTime</td>
-                            <td>@attendance.Reason</td>
-                        }
-                        else
-                        {
-                            <td>-</td>
-                            <td>-</td>
-                            <td>-</td>
-                        }
-                        @for (var day = 0; day < 5; day++)
-                        {
-                            var date = Model.Monday.AddDays(day);
-                            var dayAttendance = Model.Attendances.FirstOrDefault(a =>
-                            a.TeacherId == teacher.Id && a.Date.Date == date.Date);
-                            <td>
-                                @if (dayAttendance != null)
+                            var attendance = Model.Attendances.FirstOrDefault(a => a.TeacherId == teacher.Id);
+                            <tr class="teacher-row">
+                                <td>@teacher.Id</td>
+                                <td>
+                                    <a href="@Url.Action("Details", "Teacher", new { id = teacher.Id })">
+                                        @teacher.FullName
+                                    </a>
+                                </td>
+                                <td>@teacher.Status</td>
+                                @if (attendance != null)
                                 {
-                                    @if (dayAttendance.Status == AttendanceStatus.Present)
-                                    {
-                                        <span class="text-success">Present</span>
-                                    }
-                                    else if (dayAttendance.Status == AttendanceStatus.Absent)
-                                    {
-                                        <span class="text-danger">Absent</span>
-                                    }
-                                    else
-                                    {
-                                        <span>---</span>
-                                    }
+                                    <td>@attendance.InTime</td>
+                                    <td>@attendance.OutTime</td>
+                                    <td>@attendance.Reason</td>
                                 }
                                 else
                                 {
-                                    <span>---</span>
+                                    <td>-</td>
+                                    <td>-</td>
+                                    <td>-</td>
                                 }
-                            </td>
+                                @for (var day = 0; day < 5; day++)
+                                {
+                                    var date = Model.Monday.AddDays(day);
+                                    var dayAttendance = Model.Attendances.FirstOrDefault(a =>
+                                    a.TeacherId == teacher.Id && a.Date.Date == date.Date);
+                                    <td>
+                                        @if (dayAttendance != null)
+                                        {
+                                            @if (dayAttendance.Status == AttendanceStatus.Present)
+                                            {
+                                                <span class="text-success">Present</span>
+                                            }
+                                            else if (dayAttendance.Status == AttendanceStatus.Absent)
+                                            {
+                                                <span class="text-danger">Absent</span>
+                                            }
+                                            else
+                                            {
+                                                <span>---</span>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <span>---</span>
+                                        }
+                                    </td>
+                                }
+
+                                <td>
+                                    @if (attendance != null)
+                                    {
+                                        <a href="@Url.Action("Edit", "TeacherAttendance", new { id = attendance.AttendanceId})">Edit</a>
+                                    }
+                                </td>
+
+                                <td>
+                                    @if (attendance != null)
+                                    {
+                                        <form method="post" action="/api/delete/@teacher.Id" onsubmit="return confirm('Are you sure you want to delete this teacher and their attendance details?')">
+                                            <input type="hidden" name="teacherId" value="@teacher.Id" />
+                                            <button type="submit" class="btn btn-danger">Delete</button>
+                                        </form>
+                                    }
+                                </td>
+                            </tr>
                         }
+                    </tbody>
+                </table>
+            </section>
+            <!-- Include Bootstrap and jQuery JS -->
+            <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-                        <td>
-                            @if (attendance != null)
-                            {
-                                <a href="@Url.Action("Edit", "TeacherAttendance", new { id = attendance.AttendanceId})">Edit</a>
+            <!-- Include Bootstrap Date Range Picker JS -->
+            <script src="https://cdn.jsdelivr.net/npm/daterangepicker@3.1.0/moment.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/daterangepicker@3.1.0/daterangepicker.min.js"></script>
+
+            <script>
+                $(document).ready(function () {
+                    // Initialize week picker
+                    $('#weekPicker').daterangepicker({
+                        opens: 'left',
+                        showWeekNumbers: true,
+
+                        locale: {
+                            format: 'YYYY-MM-DD',
+                            separator: ' - ',
+                            applyLabel: 'Apply',
+                            cancelLabel: 'Cancel',
+                            weekLabel: 'W'
+                        }
+                    });
+
+                    // Add event listener for week picker change
+                    $('#weekPicker').on('apply.daterangepicker', function (ev, picker) {
+                        var startDate = picker.startDate.format('YYYY-MM-DD');
+                        var endDate = picker.endDate.format('YYYY-MM-DD');
+
+                        // Construct the action URL with query parameters
+                        var actionUrl = `/api/getDetails?startDate=${startDate}&endDate=${endDate}`;
+
+                        // Navigate to the API action URL
+                        window.location.href = actionUrl;
+                    });
+
+                    // Add event listener for search input
+                    $('#searchInput').on('input', function () {
+                        var searchText = $(this).val().toLowerCase();
+                        $('.teacher-row').each(function () {
+                            var teacherName = $(this).find('td:nth-child(2) a').text().toLowerCase();
+                            if (teacherName.includes(searchText)) {
+                                $(this).show();
+                            } else {
+                                $(this).hide();
                             }
-                        </td>
-
-                        <td>
-                            @if (attendance != null)
-                            {
-                                <form method="post" action="/api/delete/@teacher.Id" onsubmit="return confirm('Are you sure you want to delete this teacher and their attendance details?')">
-                                    <input type="hidden" name="teacherId" value="@teacher.Id" />
-                                    <button type="submit" class="btn btn-danger">Delete</button>
-                                </form>
-                            }
-
-
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-
-    <!-- Include Bootstrap and jQuery JS -->
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-    <!-- Include Bootstrap Date Range Picker JS -->
-    <script src="https://cdn.jsdelivr.net/npm/daterangepicker@3.1.0/moment.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/daterangepicker@3.1.0/daterangepicker.min.js"></script>
-
-    <script>
-        $(document).ready(function () {
-            // Initialize week picker
-            $('#weekPicker').daterangepicker({
-                opens: 'left',
-                showWeekNumbers: true,
-                locale: {
-                    format: 'YYYY-MM-DD',
-                    separator: ' - ',
-                    applyLabel: 'Apply',
-                    cancelLabel: 'Cancel',
-                    weekLabel: 'W',
-                    customRangeLabel: 'Custom Range'
-                },
-                ranges: {
-                    'This Week': [moment().startOf('isoWeek'), moment().endOf('isoWeek')],
-                }
-            });
-
-            // Add event listener for week picker change
-            $('#weekPicker').on('apply.daterangepicker', function (ev, picker) {
-                var startDate = picker.startDate.format('YYYY-MM-DD');
-                var endDate = picker.endDate.format('YYYY-MM-DD');
-
-                // Construct the action URL with query parameters
-                var actionUrl = `/api/getDetails?startDate=${startDate}&endDate=${endDate}`;
-
-                // Navigate to the API action URL
-                window.location.href = actionUrl;
-            });
-        });
-    </script>
+                        });
+                    });
+                });
+            </script>
+    </main>
 </body>
+
 </html>
