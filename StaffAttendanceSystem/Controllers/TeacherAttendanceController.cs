@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using StaffAttendanceSystem.Data;
 using StaffAttendanceSystem.Models;
 using System;
+
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -44,7 +45,7 @@ namespace StaffAttendanceSystem.Controllers
 
             foreach (var attendance in attendances)
             {
-                attendance.Teacher.Status = IsTeacherAvailable(attendance.TeacherId) ? TeacherStatus.Available : TeacherStatus.NotAvailable;
+                attendance.Teacher.Status = IsTeacherAvailableForToday(attendance.TeacherId) ? TeacherStatus.Available : TeacherStatus.NotAvailable;
             }
 
             await _context.SaveChangesAsync();
@@ -118,15 +119,37 @@ namespace StaffAttendanceSystem.Controllers
             return _context.AttendanceDetails.Any(e => e.AttendanceId == id);
         }
 
-        private bool IsTeacherAvailable(string teacherId)
+
+
+
+        private bool IsTeacherAvailableForToday(string teacherId)
         {
             var today = DateTime.Today;
             var attendance = _context.AttendanceDetails.FirstOrDefault(a =>
                 a.TeacherId == teacherId && a.Date.Date == today.Date);
 
-            // Check if attendance exists and the status is not Late or Absent
-            return attendance == null || attendance.Status != AttendanceStatus.Late && attendance.Status != AttendanceStatus.Absent;
+            // Check if attendance exists
+            if (attendance != null)
+            {
+                if (attendance.Status == AttendanceStatus.Present ||
+                    attendance.Status == AttendanceStatus.Late)
+                {
+                    // Teacher is present or late, so return true
+                    return true;
+                }
+                else if (attendance.Status == AttendanceStatus.Absent ||
+                         attendance.Status == AttendanceStatus.NotApplicable)
+                {
+                    // Teacher is absent or status is not applicable, so return false
+                    return false;
+                }
+            }
+
+            // Teacher's attendance for today is not found, so assuming not available
+            return false;
         }
+
+
 
 
         [HttpGet]
