@@ -1,4 +1,7 @@
-﻿@model StaffAttendanceSystem.Models.Teacher
+﻿@model StaffAttendanceSystem.Models.AttendanceViewModel
+@{
+    ViewBag.Title = "Teacher Details";
+}
 
 <!DOCTYPE html>
 <html>
@@ -6,6 +9,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <!-- Add any additional CSS files or styles here -->
+    <style>
+        /* Custom CSS for improved styling */
+        .sidebar {
+            background-color: #f8f9fa;
+            padding: 15px;
+        }
+
+        .profile-picture {
+            max-width: 200px;
+            height: auto;
+        }
+    </style>
 </head>
 <body>
 
@@ -25,40 +40,61 @@
 
             <!-- Main content -->
             <div class="col-md-9">
-                <h2>Teacher Details</h2>
+                <h2 class="mt-4">Teacher Details</h2>
 
-                <table class="table">
+                <table class="table table-bordered mt-3">
                     <tr>
-                        <th>ID:</th>
-                        <td>@Model.Id</td>
+                        <th class="w-25">ID:</th>
+                        <td>@Model.Teacher.Id</td>
                     </tr>
                     <tr>
                         <th>Full Name:</th>
-                        <td>@Model.FullName</td>
+                        <td>@Model.Teacher.FullName</td>
                     </tr>
                     <tr>
                         <th>Email:</th>
-                        <td>@Model.Email</td>
+                        <td>@Model.Teacher.Email</td>
                     </tr>
                     <tr>
                         <th>Phone Number:</th>
-                        <td>@Model.PhoneNumber</td>
+                        <td>@Model.Teacher.PhoneNumber</td>
                     </tr>
                     <tr>
                         <th>Department:</th>
-                        <td>@Model.Department</td>
+                        <td>@Model.Teacher.Department</td>
                     </tr>
                     <tr>
                         <th>Profile Picture:</th>
                         <td>
-                            @if (!string.IsNullOrEmpty(Model.ProfilePictureUrl))
+                            @if (!string.IsNullOrEmpty(Model.Teacher.ProfilePictureUrl))
                             {
-                                <img src="@Model.ProfilePictureUrl" alt="Profile Picture" class="img-fluid" />
+                                <img src="@Model.Teacher.ProfilePictureUrl" alt="Profile Picture" class="img-fluid profile-picture" />
                             }
                             else
                             {
                                 <p>No profile picture available.</p>
                             }
+                        </td>
+                    </tr>
+                    <!-- Monthly and Yearly Attendance Percentages -->
+                    <tr>
+                        <th>Monthly Attendance:</th>
+                        <td>
+                            <div class="progress">
+                                <div class="progress-bar" role="progressbar" style="width: @Model.CurrentMonth%;" aria-valuenow="@Model.CurrentMonth" aria-valuemin="0" aria-valuemax="100">
+                                    @Model.CurrentMonth.ToString("0.00")%
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Yearly Attendance:</th>
+                        <td>
+                            <div class="progress">
+                                <div class="progress-bar" role="progressbar" style="width: @Model.CurrentYear%;" aria-valuenow="@Model.CurrentYear" aria-valuemin="0" aria-valuemax="100">
+                                    @Model.CurrentYear.ToString("0.00")%
+                                </div>
+                            </div>
                         </td>
                     </tr>
                 </table>

@@ -92,51 +92,81 @@ namespace StaffAttendanceSystem.Controllers
             return View("Create", viewModel); // Return to the Create view with validation errors
         }
 
-        //public async Task<IActionResult> Details(string? id)
-        //{
-        //    if (string.IsNullOrEmpty(id))
-        //    {
-        //        return BadRequest(); // Handle invalid teacher ID
-        //    }
+        public async Task<IActionResult> Details(string? id)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                return BadRequest(); // Handle invalid teacher ID
+            }
 
-        //    // Find the teacher by ID in the database
-        //    var teacher = await _context.TeacherDetails.FirstOrDefaultAsync(t => t.Id == id);
+            // Find the teacher by ID in the database
+            var teacher = await _context.TeacherDetails.FirstOrDefaultAsync(t => t.Id == id);
 
-        //    if (teacher == null)
-        //    {
-        //        return NotFound(); // Handle teacher not found
-        //    }
+            if (teacher == null)
+            {
+                return NotFound(); // Handle teacher not found
+            }
 
-        //    // Get the current month and year
-        //    var currentDate = DateTime.Now;
-        //    var currentYear = currentDate.Year;
-        //    var currentMonth = currentDate.Month;
+            // Get the current month and year
+            var currentDate = DateTime.Now;
+            var currentYear = currentDate.Year;
+            var currentMonth = currentDate.Month;
 
-        //    // Calculate the counts of month attendance and year attendance for the teacher
-        //    var monthAttendanceCount = await _context.AttendanceDetails
-        //        .Where(a => a.TeacherId == id && a.Date.Year == currentYear && a.Date.Month == currentMonth)
-        //        .CountAsync();
+            // Calculate the total working days for the current month and year
+            var totalWorkingDays = GetTotalWorkingDays(currentYear, currentMonth);
 
-        //    var yearAttendanceCount = await _context.AttendanceDetails
-        //        .Where(a => a.TeacherId == id && a.Date.Year == currentYear)
-        //        .CountAsync();
+            // Calculate the counts of month attendance and year attendance for the teacher
+            var monthAttendanceCount = await _context.AttendanceDetails
+                .Where(a => a.TeacherId == id && a.Date.Year == currentYear && a.Date.Month == currentMonth)
+                .CountAsync();
 
-        //    // Calculate the total working days in the current month and year
-        //    //var totalWorkingDays = GetTotalWorkingDays(currentYear, currentMonth);
+            var yearAttendanceCount = await _context.AttendanceDetails
+                .Where(a => a.TeacherId == id && a.Date.Year == currentYear)
+                .CountAsync();
 
-        //    // Calculate the attendance percentages
-        //    var monthAttendancePercentage = (double)monthAttendanceCount / 100;
-        //    var yearAttendancePercentage = (double)yearAttendanceCount /  100;
+            // Calculate the attendance percentages
+            var monthAttendancePercentage = (int)monthAttendanceCount / totalWorkingDays;
+            var yearAttendancePercentage = (int)yearAttendanceCount / totalWorkingDays;
 
-        //    var viewModel = new AttendanceViewModel
-        //    {
-        //        Teacher = teacher,
-        //        CurrentMonth = monthAttendancePercentage,
-        //        CurrentYear = yearAttendancePercentage,
-        //    };
+            var viewModel = new AttendanceViewModel
+            {
+                Teacher = teacher,
+                CurrentMonth = monthAttendancePercentage * 100, // Convert to percentage
+                CurrentYear = yearAttendancePercentage * 100,   // Convert to percentage
+            };
 
-        //    return View(viewModel); // Display teacher details using a view
-        //}
+            return View(viewModel); // Display teacher details using a view
+        }
+
+        // Create a method to calculate total working days
+        private int GetTotalWorkingDays(int year, int month)
+        {
+            int totalWorkingDays = 0;
+            int daysInMonth = DateTime.DaysInMonth(year, month);
+
+            // Define a list of holidays
+            var holidays = new List<DateTime>
+    {
+        new DateTime(year, 9, 1),   // Start of the academic year
+        new DateTime(year, 12, 1),  // Commemoration Day
+        new DateTime(year, 3, 10),  // Ramadan starts
+        new DateTime(year, 4, 9),   // Eid al-Fitr
+        new DateTime(year, 6, 17),  // Eid al-Adha
+    };
+
+            for (int day = 1; day <= daysInMonth; day++)
+            {
+                var currentDate = new DateTime(year, month, day);
+
+                // Check if the current date is a holiday or weekend (Friday or Saturday)
+                if (!holidays.Contains(currentDate) && currentDate.DayOfWeek != DayOfWeek.Friday && currentDate.DayOfWeek != DayOfWeek.Saturday)
+                {
+                    totalWorkingDays++;
+                }
+            }
+
+            return totalWorkingDays;
+        }
 
 
     }
